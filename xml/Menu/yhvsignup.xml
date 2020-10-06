@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<menu>
+  <item>
+    <path>civicrm/volunteer-signup</path>
+    <page_callback>CRM_Yhvsignup_Form_Signup</page_callback>
+    <title>Signup</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
+  <item>
+    <path>civicrm/signup</path>
+    <page_callback>CRM_Yhvsignup_Page_Signup</page_callback>
+    <title>Signup</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
+  <item>
+    <path>civicrm/searchsignup</path>
+    <page_callback>CRM_Yhvsignup_Page_SearchSignup</page_callback>
+    <title>SearchSignup</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
+  <item>
+    <path>civicrm/insertsignup</path>
+    <page_callback>CRM_Yhvsignup_Page_InsertSignup</page_callback>
+    <title>InsertSignup</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
+</menu>
