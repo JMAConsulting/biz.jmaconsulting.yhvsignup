@@ -153,8 +153,16 @@ function yhvsignup_civicrm_themes(&$themes) {
   _yhvsignup_civix_civicrm_themes($themes);
 }
 
+/**
+ * Implements hook_civicrm_pre().
+ */
 function yhvsignup_civicrm_pre($op, $objectName, $id, &$params) {
+  // Save funder automatically for volunteer/request activities.
   if (in_array($op, ['create', 'edit']) && $objectName == 'Activity') {
+    $activityTypes = CRM_Activity_BAO_Activity::buildOptions('activity_type_id');
+    if (!in_array($activityTypes[$params['activity_type_id']], ['Volunteer', 'Volunteer Request'])) {
+      return;
+    }
     $clauses = [];
     foreach (['Location','Division','Program','Funder'] as $field) {
       $$field = CRM_Yhvrequestform_Utils::getCustomFieldID($field);

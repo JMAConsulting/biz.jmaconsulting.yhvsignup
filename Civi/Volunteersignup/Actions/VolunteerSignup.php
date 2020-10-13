@@ -45,6 +45,7 @@ class VolunteerSignup extends AbstractAction {
       new Specification('activity_status', 'Text', E::ts('Activity Status'), FALSE, null, null, null, FALSE),
       new Specification('activity_date', 'Timestamp', E::ts('Activity Date'), FALSE),
       new Specification('id', 'Integer', E::ts('Activity ID'), false),
+      new Specification('duration', 'Float', E::ts('Activity Duration'), false),
       new Specification('campaign_id', 'Integer', E::ts('Campaign'), false),
       $subject,
       new Specification('details', 'Text', E::ts('Details'), false),
@@ -118,6 +119,9 @@ class VolunteerSignup extends AbstractAction {
     }
     if ($parameters->doesParameterExists('details')) {
       $activityParams['details'] = $parameters->getParameter('details');
+    }
+    if ($parameters->doesParameterExists('duration')) {
+      $activityParams['duration'] = $parameters->getParameter('duration');
     }
     if ($parameters->doesParameterExists('activity_type_id')) {
       $activityParams['activity_type_id'] = $parameters->getParameter('activity_type_id');

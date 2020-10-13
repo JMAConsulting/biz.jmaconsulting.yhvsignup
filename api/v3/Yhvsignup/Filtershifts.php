@@ -30,6 +30,7 @@ function civicrm_api3_yhvsignup_Filtershifts($params) {
       $division,
       $hours,
       "activity_date_time",
+      "duration",
     ];
     $searchParams = [
       'sequential' => 1,
@@ -54,14 +55,13 @@ function civicrm_api3_yhvsignup_Filtershifts($params) {
     if ($activities['count'] > 0) {
       foreach ($activities['values'] as $activity) {
         $returnValues[] = [
-          //'Job' => $activity[CRM_Yhvrequestform_Utils::getCustomFieldID('Job', VOLUNTEERING_CUSTOM)],
           'ID' => (int) $activity['id'],
           'Contact ID' => (int) $activity['target_contact_id'][0],
           'Job' => $activity[$job],
           'Division' => $activity[$division],
           'Program' => $activity[$program],
           'Location' => $activity[$location],
-          'Volunteer Hours' => (float) $activity[$hours],
+          'Volunteer Hours' => (float) $activity["duration"],
           'Date' => date('Y-m-d', strtotime($activity['activity_date_time'])),
           'Status' => "Scheduled",
         ];

@@ -15,8 +15,8 @@ use CRM_Yhvsignup_ExtensionUtil as E;
  */
 function civicrm_api3_yhvsignup_Geturls($params) {
   $returnValues = [
-    'filterUrl' => get_site_url() . '/volunteer-filter',
-    'actionUrl' => get_site_url() . '/volunteer-action',
+    'filterUrl' => $params['target'] . '/volunteer-filter',
+    'actionUrl' => $params['target'] . '/volunteer-action',
   ];
 
   return civicrm_api3_create_success($returnValues, $params, 'Yhvsignup', 'Geturls');

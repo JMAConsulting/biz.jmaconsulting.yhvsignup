@@ -42,6 +42,7 @@ function civicrm_api3_yhvsignup_Getshifts($params) {
       $division,
       $hours,
       "activity_date_time",
+      "duration",
     ];
     $activityParams = [
       'sequential' => 1,
@@ -67,7 +68,7 @@ function civicrm_api3_yhvsignup_Getshifts($params) {
           'Division' => $activity[$division],
           'Program' => $activity[$program],
           'Location' => $activity[$location],
-          'Volunteer Hours' => (float) $activity[$hours],
+          'Volunteer Hours' => (float) $activity['duration'],
           'Date' => date('Y-m-d', strtotime($activity['activity_date_time'])),
           'Status' => "Scheduled",
         ];
