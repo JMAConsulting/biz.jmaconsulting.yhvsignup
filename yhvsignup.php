@@ -153,6 +153,32 @@ function yhvsignup_civicrm_themes(&$themes) {
   _yhvsignup_civix_civicrm_themes($themes);
 }
 
+function yhvsignup_civicrm_pre($op, $objectName, $id, &$params) {
+  if (in_array($op, ['create', 'edit']) && $objectName == 'Activity') {
+    $clauses = [];
+    foreach (['Location','Division','Program','Funder'] as $field) {
+      $$field = CRM_Yhvrequestform_Utils::getCustomFieldID($field);
+      foreach ($params as $key => $value) {
+        if (substr($key, 0, strlen($$field)) === $$field) {
+          if ($field != 'Funder' && !empty($value)) {
+            $clauses[] = $field . ' = "' . $value . '"';
+          }
+          if ($field == 'Funder') {
+            $funderKey = $key;
+          }
+        }
+      }
+    }
+    if (empty($clauses)) {
+      return;
+    }
+    $sql = "SELECT Funder FROM civicrm_volunteer_lookup WHERE " . implode(' AND ', $clauses);
+    $funder = CRM_Core_DAO::singleValueQuery($sql);
+    if (!empty($funder) && empty($params[$funderKey])) {
+      $params[$funderKey] = $funder;
+    }
+  }
+}
 // --- Functions below this ship commented out. Uncomment as required. ---
 
 /**
