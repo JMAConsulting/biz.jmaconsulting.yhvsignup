@@ -7,9 +7,9 @@
  * extension.
  */
 class CRM_Yhvsignup_ExtensionUtil {
-  const SHORT_NAME = "yhvsignup";
-  const LONG_NAME = "biz.jmaconsulting.yhvsignup";
-  const CLASS_PREFIX = "CRM_Yhvsignup";
+  const SHORT_NAME = 'yhvsignup';
+  const LONG_NAME = 'biz.jmaconsulting.yhvsignup';
+  const CLASS_PREFIX = 'CRM_Yhvsignup';
 
   /**
    * Translate a string using the extension's domain.
