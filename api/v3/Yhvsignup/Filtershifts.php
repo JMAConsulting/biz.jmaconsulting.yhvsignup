@@ -63,6 +63,7 @@ function civicrm_api3_yhvsignup_Filtershifts($params) {
           'Location' => $activity[$location],
           'Volunteer Hours' => (float) $activity["duration"],
           'Date' => date('Y-m-d', strtotime($activity['activity_date_time'])),
+          'Start Time' => date('h:i A', strtotime($activity['activity_date_time'])),
           'Status' => "Scheduled",
         ];
       }

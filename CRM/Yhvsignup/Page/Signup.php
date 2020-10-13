@@ -8,11 +8,13 @@ class CRM_Yhvsignup_Page_Signup extends CRM_Core_Page {
 
     if (!empty($vals['ID'])) {
       $options = [];
+      $date = date('Ymd', strtotime($vals['Date']));
+      $time = date('His', strtotime($vals['Start Time']));
       // Create Params.
       $params = [
         'id' => $vals['ID'],
         'contact_id' => $vals['contact_id'],
-        'date' => date('Y-m-d', strtotime($vals['Date'])),
+        'date' => date('YmdHis', strtotime("$date $time")),
         'job' => $vals['Job'],
         'location' => $vals['Location'],
         'division' => $vals['Division'],
