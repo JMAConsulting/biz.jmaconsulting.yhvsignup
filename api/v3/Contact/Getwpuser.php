@@ -29,8 +29,8 @@ function _civicrm_api3_contact_Getwpuser_spec(&$spec) {
 function civicrm_api3_contact_Getwpuser($params) {
   $user = get_user_by('login', $params['username']);
   if (!$user->data->ID) {
-    return FALSE;
+    return civicrm_api3_create_success(FALSE, $params, 'Contact');
   }
   
-  return $user;
+  return civicrm_api3_create_success($user, $params, 'Contact');
 }
