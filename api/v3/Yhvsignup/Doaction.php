@@ -16,7 +16,7 @@ use CRM_Yhvsignup_ExtensionUtil as E;
 function civicrm_api3_yhvsignup_Doaction($params) {
   $returnValues = [];
 
-  if ($params['actionmethod'] == 'insert') {
+  if (!empty($params['actionmethod']) && $params['actionmethod'] == 'insert') {
     $params = array_filter($params);
 
     if (!empty($params)) {
@@ -38,7 +38,7 @@ function civicrm_api3_yhvsignup_Doaction($params) {
       $returnValues = $call->getReply();
     }
   }
-  if ($params['actionmethod'] == 'update') {
+  if (!empty($params['actionmethod']) && $params['actionmethod'] == 'update') {
     if (!empty($params['ID'])) {
       $options = [];
       // Create Params.
@@ -59,7 +59,7 @@ function civicrm_api3_yhvsignup_Doaction($params) {
       $returnValues = $call->getReply();
     }
   }
-  if ($params['actionmethod'] == 'search') {
+  if (!empty($params['actionmethod']) && $params['actionmethod'] == 'search') {
     $params = array_filter($params);
     $params['Status'] = 'Scheduled';
     $params['activity_type_id'] = 'Volunteer';
@@ -68,6 +68,28 @@ function civicrm_api3_yhvsignup_Doaction($params) {
     $call = wpcmrf_api('Yhvsignup', 'filtershifts', $params, $options, CMRF_PROFILE_ID);
     $returnValues = $call->getReply();
   }
+  if (!empty($params['batchupdate'])) {
+    foreach ($params['batchupdate'] as $updateParams) {
+      $options = [];
+      $date = date('Ymd', strtotime($updateParams['Date']));
+      $time = date('His', strtotime($updateParams['Start_Time']));
+      $processorParams = [
+        'id' => $updateParams['ID'],
+        'contact_id' => (int) $params['cid'],
+        'date' => date('YmdHis', strtotime("$date $time")),
+        'job' => $updateParams['Job'],
+        'location' => $updateParams['Location'],
+        'division' => $updateParams['Division'],
+        'program' => $updateParams['Program'],
+        'status' => $updateParams['Status'],
+        'volunteer_hours' => $updateParams['Volunteer_Hours'],
+      ];
+      $call = wpcmrf_api('FormProcessor', 'volunteer_signup', $processorParams, $options, CMRF_PROFILE_ID);
+      $call->getReply();
+    }
+  }
+
+  $returnValues['values'] = $params;
 
   if (empty($returnValues['values'])) {
     $returnValues['values'] = [];
