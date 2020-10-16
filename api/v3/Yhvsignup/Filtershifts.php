@@ -19,7 +19,6 @@ function civicrm_api3_yhvsignup_Filtershifts($params) {
     $location = CRM_Yhvrequestform_Utils::getCustomFieldID('Location', VOLUNTEERING_CUSTOM);
     $program = CRM_Yhvrequestform_Utils::getCustomFieldID('Program', VOLUNTEERING_CUSTOM);
     $division = CRM_Yhvrequestform_Utils::getCustomFieldID('Division', VOLUNTEERING_CUSTOM);
-    $hours = CRM_Yhvrequestform_Utils::getCustomFieldID('Work_Hours', VOLUNTEERING_CUSTOM);
     $fieldsToReturn = [
       "target_contact_id",
       "status_id",
@@ -28,7 +27,6 @@ function civicrm_api3_yhvsignup_Filtershifts($params) {
       $location,
       $program,
       $division,
-      $hours,
       "activity_date_time",
       "duration",
     ];
@@ -41,7 +39,6 @@ function civicrm_api3_yhvsignup_Filtershifts($params) {
       $location => CRM_Utils_Array::value('Location', $params),
       $program => CRM_Utils_Array::value('Program', $params),
       $division => CRM_Utils_Array::value('Division', $params),
-      $hours => CRM_Utils_Array::value('Work_Hours', $params),
       'activity_date' => CRM_Utils_Array::value('Date', $params),
       'activity_type_id' => $params['activity_type_id'],
     ];

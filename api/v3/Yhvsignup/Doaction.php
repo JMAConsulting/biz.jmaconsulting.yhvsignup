@@ -22,9 +22,11 @@ function civicrm_api3_yhvsignup_Doaction($params) {
     if (!empty($params)) {
       $options = [];
       // Format params for formProcessor.
+      $date = date('Ymd', strtotime($params['Date']));
+      $time = date('His', strtotime($params['Start_Time']));
       $processorParams = [
         'contact_id' => $params['contact_id'],
-        'date' => date('Y-m-d', strtotime($params['Date'])),
+        'date' => date('YmdHis', strtotime("$date $time")),
         'job' => $params['Job'],
         'location' => $params['Location'],
         'division' => $params['Division'],
@@ -40,10 +42,12 @@ function civicrm_api3_yhvsignup_Doaction($params) {
     if (!empty($params['ID'])) {
       $options = [];
       // Create Params.
+      $date = date('Ymd', strtotime($params['Date']));
+      $time = date('His', strtotime($params['Start_Time']));
       $processorParams = [
         'id' => $params['ID'],
         'contact_id' => $params['contact_id'],
-        'date' => date('Y-m-d', strtotime($params['Date'])),
+        'date' => date('YmdHis', strtotime("$date $time")),
         'job' => $params['Job'],
         'location' => $params['Location'],
         'division' => $params['Division'],
