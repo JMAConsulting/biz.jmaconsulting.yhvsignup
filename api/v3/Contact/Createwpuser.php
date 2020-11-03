@@ -48,7 +48,7 @@ function civicrm_api3_contact_Createwpuser($params) {
       'contact_id' => $params['cid'],
       'uf_name' => $params['email'],
     ];
-    CRM_Core_BAO_UFMatch::create($ufmatch);
+    CRM_Core_BAO_UFMatch::create($ufMatch);
   }
   else {
     $uid = $user->ID;
