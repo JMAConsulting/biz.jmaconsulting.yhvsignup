@@ -40,7 +40,7 @@ function civicrm_api3_contact_Createwpuser($params) {
       'user_login' => $username,
       'user_email' => $params['mail'],
       'nickname' => $username,
-      'role' => get_option('default_role'),
+      'role' => 'inactive',
     ];
     $uid = wp_insert_user($user_data);
     $ufMatch = [
