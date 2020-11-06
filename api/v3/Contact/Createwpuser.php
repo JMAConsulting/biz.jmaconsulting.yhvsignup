@@ -30,7 +30,7 @@ function _civicrm_api3_contact_Createwpuser_spec(&$spec) {
  * @throws API_Exception
  */
 function civicrm_api3_contact_Createwpuser($params) {
-  // Return the user since we already have one with sn existing email.
+  // Return the user since we already have one with an existing email.
   $user = get_user_by('login', $params['email']);
   if (!empty($user)) {
     return civicrm_api3_create_success($user->ID, $params, 'Contact');

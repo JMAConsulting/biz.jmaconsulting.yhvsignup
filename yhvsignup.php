@@ -187,6 +187,28 @@ function yhvsignup_civicrm_pre($op, $objectName, $id, &$params) {
     }
   }
 }
+
+function yhvsignup_civicrm_tokens(&$tokens) {
+  $tokens['contact'] = [
+    'contact.resetlink' => 'Reset Password Link',
+  ];
+}
+
+function yhvsignup_civicrm_tokenValues(&$values, $cids, $job = null, $tokens = [], $context = null) {
+  if(isset($tokens['contact'])) {
+    foreach ($cids as $cid) {
+      $uf = civicrm_api3('UFMatch', 'get', [
+        'sequential' => 1,
+        'contact_id' => $cid,
+      ]);
+      if (!empty($uf['values'][0]['uf_id'])) {
+        $values[$cid]['contact.resetlink'] = $uf['values'][0]['uf_id'];
+      }
+    }
+  }
+}
+
+
 // --- Functions below this ship commented out. Uncomment as required. ---
 
 /**
