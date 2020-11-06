@@ -2,6 +2,7 @@
 define('CMRF_PROFILE_ID', 1);
 
 require_once 'yhvsignup.civix.php';
+require_once 'yhvsignup.variables.php';
 // phpcs:disable
 use CRM_Yhvsignup_ExtensionUtil as E;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -195,14 +196,15 @@ function yhvsignup_civicrm_tokens(&$tokens) {
 }
 
 function yhvsignup_civicrm_tokenValues(&$values, $cids, $job = null, $tokens = [], $context = null) {
-  if(isset($tokens['contact'])) {
+  if (isset($tokens['contact'])) {
     foreach ($cids as $cid) {
       $uf = civicrm_api3('UFMatch', 'get', [
         'sequential' => 1,
         'contact_id' => $cid,
       ]);
+      $cs = CRM_Contact_BAO_Contact_Utils::generateChecksum($cid, NULL, 'inf');
       if (!empty($uf['values'][0]['uf_id'])) {
-        $values[$cid]['contact.resetlink'] = $uf['values'][0]['uf_id'];
+        $values[$cid]['contact.resetlink'] = $url = YHV_FRONT_SITE . '?action=resetpassword&cs=' . $cs . '&uid=' . $uf['values'][0]['uf_id'];
       }
     }
   }
