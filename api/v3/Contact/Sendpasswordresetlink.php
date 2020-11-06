@@ -40,7 +40,7 @@ function civicrm_api3_contact_Sendpasswordresetlink($params) {
   $messageTemplates = new CRM_Core_DAO_MessageTemplate();
   $messageTemplates->id = SEND_RESETLINK_MSG_TEMPLATE;
   $messageTemplates->find(TRUE);
-  $url = YHV_FRONT_SITE . '?action=resetpassword&cs=' . $cs . '&username=' . $params['username'];
+  $url = YHV_FRONT_SITE . '?action=resetpassword&cs=' . $cs . '&uid=' . $userdata->data->ID;
   $body_subject = CRM_Core_Smarty::singleton()->fetch("string:$messageTemplates->msg_subject");
   $body_text    = str_replace('{username}', $params['username'], str_replace('{url}', $url, $messageTemplates->msg_text));
   $body_html    = str_replace('{username}', $params['username'], str_replace('{url}', $url, $messageTemplates->msg_html));

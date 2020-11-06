@@ -30,7 +30,7 @@ function _civicrm_api3_contact_Wpresetpassword_spec(&$spec) {
  * @throws API_Exception
  */
 function civicrm_api3_contact_Wpresetpassword($params) {
-  $user = get_user_by('login', $params['username']) ?: get_user_by('email', $params['username']);
+  $user = get_user_by('id', $params['username']);
   if (in_array('inactive', $user->roles)) {
     return civicrm_api3_create_success(['error' => 'You have not been approved yet. Please contact your system administrator'], $params, 'Contact');
   }
