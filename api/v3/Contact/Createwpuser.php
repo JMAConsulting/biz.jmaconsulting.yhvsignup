@@ -30,15 +30,21 @@ function _civicrm_api3_contact_Createwpuser_spec(&$spec) {
  * @throws API_Exception
  */
 function civicrm_api3_contact_Createwpuser($params) {
-  $username = strtolower(trim(sanitize_user(implode('.', [$params['first_name'], $params['last_name']]))));
-  $user = get_user_by('login', $params['email']) ?: get_user_by('login', $username);
+  // Return the user since we already have one with sn existing email.
+  $user = get_user_by('login', $params['email']);
+  if (!empty($user)) {
+    return civicrm_api3_create_success($user->ID, $params, 'Contact');
+  }
   $uid = NULL;
   if (!$user) {
+    // We didn't find a user, so generate a username.
+    $username = generateUserName($params);
+
     $user_data = [
       'ID' => '',
-      'user_pass' => 'changeme',
+      'user_pass' => randomPassword(),
       'user_login' => $username,
-      'user_email' => $params['mail'],
+      'user_email' => $params['email'],
       'nickname' => $username,
       'role' => 'inactive',
     ];
@@ -50,9 +56,31 @@ function civicrm_api3_contact_Createwpuser($params) {
     ];
     CRM_Core_BAO_UFMatch::create($ufMatch);
   }
-  else {
-    $uid = $user->ID;
-  }
 
   return civicrm_api3_create_success($uid, $params, 'Contact');
+}
+
+/**
+ * Generate a safe WordPress user name for use
+ * @param array $params
+ */
+function generateUserName($params) {
+  // Check to see if a the user name exists.
+  $username = strtolower(trim(sanitize_user(implode('.', [$params['first_name'], $params['last_name']]))));
+  $existingUsers = get_users( array( 'search' => $username ) );
+  if (!empty($existingUsers)) {
+    $userCount = count($existingUsers) + 1;
+    return $username . $userCount;
+  }
+  return $username;
+}
+
+/**
+ * Generate a random strong password
+ */
+function randomPassword() {
+  $chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_-=+;:,.?";
+  $length = rand(10, 16);
+  $password = substr( str_shuffle(sha1(rand() . time()) . $chars ), 0, $length );
+  return $password;
 }

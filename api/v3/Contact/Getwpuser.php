@@ -33,10 +33,13 @@ function _civicrm_api3_contact_Getwpuser_spec(&$spec) {
      return civicrm_api3_create_success(['error' => strip_tags($response->get_error_message( $error_code ))], $params, 'Contact');
    }
    else {
-     $user = get_user_by('login', $params['username']);
-     if (!empty($user->data->ID)) {
-       $user->data->cid = CRM_Core_BAO_UFMatch::getContactId($user->data->ID);
+     // Check to see if user has an inactive role.
+     if (in_array('inactive', $response->roles)) {
+       return civicrm_api3_create_success(['error' => 'You have not been approved yet. Please contact your system administrator', $params, 'Contact');
      }
-     return civicrm_api3_create_success($user, $params, 'Contact');
+     if (!empty($response->data->ID)) {
+       $response->data->cid = CRM_Core_BAO_UFMatch::getContactId($response->data->ID);
+     }
+     return civicrm_api3_create_success($response, $params, 'Contact');
    }
  }
