@@ -35,7 +35,7 @@ function _civicrm_api3_contact_Getwpuser_spec(&$spec) {
    else {
      // Check to see if user has an inactive role.
      if (in_array('inactive', $response->roles)) {
-       return civicrm_api3_create_success(['error' => 'You have not been approved yet. Please contact your system administrator', $params, 'Contact');
+       return civicrm_api3_create_success(['error' => 'You have not been approved yet. Please contact your system administrator'], $params, 'Contact');
      }
      if (!empty($response->data->ID)) {
        $response->data->cid = CRM_Core_BAO_UFMatch::getContactId($response->data->ID);
