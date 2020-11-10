@@ -61,7 +61,7 @@ function civicrm_api3_contact_Createwpuser($params) {
     $ufDupeName->uf_name = $params['email'];
     if ($ufDupeName->find(TRUE)) {
       if ($ufDupeName->contact_id != $params['cid']) {
-        $ufDupeName->contact_id != $params['cid'];
+        $ufDupeName->contact_id = $params['cid'];
         $ufDupeName->save();
       }
     }
