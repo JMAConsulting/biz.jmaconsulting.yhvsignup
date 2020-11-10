@@ -51,12 +51,23 @@ function civicrm_api3_contact_Createwpuser($params) {
       'role' => 'inactive',
     ];
     $uid = wp_insert_user($user_data);
+
     $ufMatch = [
       'uf_id' => $uid,
       'contact_id' => $params['cid'],
       'uf_name' => $params['email'],
     ];
-    CRM_Core_BAO_UFMatch::create($ufMatch);
+    $ufDupeName = new CRM_Core_DAO_UFMatch();
+    $ufDupeName->uf_name = $params['email'];
+    if ($ufDupeName->find(TRUE)) {
+      if ($ufDupeName->contact_id != $params['cid']) {
+        $ufDupeName->contact_id != $params['cid'];
+        $ufDupeName->save();
+      }
+    }
+    else {
+      CRM_Core_BAO_UFMatch::create($ufMatch);
+    }
   }
 
   return civicrm_api3_create_success($uid, $params, 'Contact');

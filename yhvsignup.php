@@ -207,7 +207,7 @@ function yhvsignup_civicrm_tokenValues(&$values, $cids, $job = null, $tokens = [
       if (!empty($uf['values'][0]['uf_id'])) {
         $values[$cid]['contact.resetlink'] = YHV_FRONT_SITE . '?action=resetpassword&cs=' . $cs . '&uid=' . $uf['values'][0]['uf_id'];
         $user = get_user_by('id', $uf['values'][0]['uf_id']);
-        $values[$cid]['contact.userid'] = $user->data->user_login;
+        $values[$cid]['contact.username'] = $user->data->user_login;
       }
     }
   }

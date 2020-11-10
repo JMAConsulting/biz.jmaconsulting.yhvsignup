@@ -89,7 +89,7 @@ function civicrm_api3_yhvsignup_Doaction($params) {
     }
   }
 
-  $returnValues['values'] = $params;
+//  $returnValues['values'] = $params;
 
   if (empty($returnValues['values'])) {
     $returnValues['values'] = [];
