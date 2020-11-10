@@ -37,7 +37,7 @@ function civicrm_api3_contact_Sendpasswordresetlink($params) {
   }
   $contactID = CRM_Core_BAO_UFMatch::getContactId($userdata->data->ID);
 
-  $cs = CRM_Contact_BAO_Contact_Utils::generateChecksum($contactID, NULL, 'inf');
+  $cs = CRM_Contact_BAO_Contact_Utils::generateChecksum($contactID, NULL, 1);
   $contact = civicrm_api3('Contact', 'getsingle', ['id' => $contactID]);
   $contact['email'] = $contact['email'] ?: CRM_Core_DAO::singleValueQuery("SELECT email FROM civicrm_email WHERE is_primary = 1 AND contact_id = " . $contactID . " LIMIT 1");
   $messageTemplates = new CRM_Core_DAO_MessageTemplate();
