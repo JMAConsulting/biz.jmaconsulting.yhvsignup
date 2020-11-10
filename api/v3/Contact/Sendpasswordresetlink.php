@@ -32,6 +32,9 @@ function civicrm_api3_contact_Sendpasswordresetlink($params) {
   if (!$userdata->data->ID) {
     return civicrm_api3_create_success(FALSE, $params, 'Contact');
   }
+  if (in_array('inactive', $userdata->roles)) {
+    return civicrm_api3_create_success(['error' => 'You have not been approved yet. Please contact your system administrator'], $params, 'Contact');
+  }
   $contactID = CRM_Core_BAO_UFMatch::getContactId($userdata->data->ID);
 
   $cs = CRM_Contact_BAO_Contact_Utils::generateChecksum($contactID, NULL, 'inf');
