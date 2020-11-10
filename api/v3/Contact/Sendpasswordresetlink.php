@@ -28,7 +28,7 @@ function _civicrm_api3_contact_Sendpasswordresetlink_spec(&$spec) {
  * @throws API_Exception
  */
 function civicrm_api3_contact_Sendpasswordresetlink($params) {
-  $userdata = get_user_by('login', $params['username']) ?: get_user_by('email', $params['username']);
+  $userdata = get_user_by('login', $params['username']) ?: get_user_by('email', strtolower($params['username']));
   if (!$userdata->data->ID) {
     return civicrm_api3_create_success(FALSE, $params, 'Contact');
   }

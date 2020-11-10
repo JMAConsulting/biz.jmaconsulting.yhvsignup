@@ -44,7 +44,7 @@ function civicrm_api3_contact_Createwpuser($params) {
       'ID' => '',
       'user_pass' => randomPassword(),
       'user_login' => $username,
-      'user_email' => $params['email'],
+      'user_email' => strtolower($params['email']),
       'first_name' => $params['first_name'],
       'last_name' => $params['last_name'],
       'nickname' => $username,
