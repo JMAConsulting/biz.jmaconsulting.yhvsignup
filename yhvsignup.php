@@ -192,6 +192,7 @@ function yhvsignup_civicrm_pre($op, $objectName, $id, &$params) {
 function yhvsignup_civicrm_tokens(&$tokens) {
   $tokens['contact'] = [
     'contact.resetlink' => 'Reset Password Link',
+    'contact.username' => 'Username',
   ];
 }
 
@@ -204,7 +205,9 @@ function yhvsignup_civicrm_tokenValues(&$values, $cids, $job = null, $tokens = [
       ]);
       $cs = CRM_Contact_BAO_Contact_Utils::generateChecksum($cid, NULL, 'inf');
       if (!empty($uf['values'][0]['uf_id'])) {
-        $values[$cid]['contact.resetlink'] = $url = YHV_FRONT_SITE . '?action=resetpassword&cs=' . $cs . '&uid=' . $uf['values'][0]['uf_id'];
+        $values[$cid]['contact.resetlink'] = YHV_FRONT_SITE . '?action=resetpassword&cs=' . $cs . '&uid=' . $uf['values'][0]['uf_id'];
+        $user = get_user_by('id', $uf['values'][0]['uf_id']);
+        $values[$cid]['contact.userid'] = $user->data->user_login;
       }
     }
   }
