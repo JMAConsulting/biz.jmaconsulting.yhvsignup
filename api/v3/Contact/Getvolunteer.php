@@ -38,7 +38,7 @@ function civicrm_api3_contact_Getvolunteer($params) {
       'How_many_years_of_driving_experience_do_you_have_in_Ontario_',
     ];
     foreach ($customFields as $field) {
-      $customIds[] = 'custom_' . CRM_Core_DAO::singleValueQuery('SELECT id FROM civicrm_custom_field WHERE name = %1', [1 => [$field, 'String']]);
+      $customIds[$field] = 'custom_' . CRM_Core_DAO::singleValueQuery('SELECT id FROM civicrm_custom_field WHERE name = %1 AND custom_group_id = 9', [1 => [$field, 'String']]);
     }
 
     $returnFields = [
@@ -48,8 +48,17 @@ function civicrm_api3_contact_Getvolunteer($params) {
       'email',
       'state_province',
     ];
-    $returnFields += $customIds;
+    $returnFields = array_merge($returnFields, $customIds);
     $contact = civicrm_api3('Contact', 'getsingle', ['id' => $params['cid'], 'return' => $returnFields]);
+    foreach ($customIds as $id => $customField) {
+      $contact[$id] = $contact[$customField];		    
+    }
+    // Phones.
+    $mobile = civicrm_api3('Phone', 'get', ['return' => 'phone_numeric', 'sequential' => 1, 'contact_id' => $params['cid'], 'location_type_id' => 'Home', 'phone_type_id' => 'Mobile']);
+    $residence = civicrm_api3('Phone', 'get', []);
+    CRM_Core_Error::debug('ag', $phones);
+    //foreach () {
+    //}
     CRM_Core_Error::debug('efa', $contact);exit;
     return civicrm_api3_create_success($returnValues, $params, 'Contact', 'Getvolunteer');
   }
