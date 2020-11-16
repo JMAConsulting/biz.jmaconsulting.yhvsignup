@@ -53,6 +53,15 @@ function civicrm_api3_contact_Getvolunteer($params) {
     foreach ($customIds as $id => $customField) {
       $contact[$id] = $contact[$customField];		    
     }
+    // Address.
+    $address = civicrm_api3('Address', 'get', [
+      'contact_id' => $params['cid'],
+      'is_primary' => 1,
+      'sequential' => 1,
+    ]);
+    if (!empty($address['values'])) {
+      $contact['address'] = $address['values'][0];
+    }
     // Phones.
     $mobile = civicrm_api3('Phone', 'get', [
       'return' => 'phone_numeric',
