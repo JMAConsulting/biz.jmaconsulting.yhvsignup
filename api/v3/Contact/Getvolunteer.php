@@ -92,13 +92,13 @@ function civicrm_api3_contact_Getvolunteer($params) {
       'location_type_id' => 'Work',
       'phone_type_id' => 'Phone',
     ]);
-    if (!empty($mobile['values'][0]['phone_numeric'])) {
+    if (!empty($mobile['values'][0]['phone'])) {
       $contact['mobile'] = $mobile['values'][0]['phone'];
     }
-    if (!empty($residence['values'][0]['phone_numeric'])) {
+    if (!empty($residence['values'][0]['phone'])) {
       $contact['residence'] = $residence['values'][0]['phone'];
     }
-    if (!empty($office['values'][0]['phone_numeric'])) {
+    if (!empty($office['values'][0]['phone'])) {
       $contact['office'] = $office['values'][0]['phone'];
     }
     // Relationship.
