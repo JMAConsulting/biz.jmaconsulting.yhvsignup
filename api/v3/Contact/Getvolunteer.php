@@ -61,6 +61,9 @@ function civicrm_api3_contact_Getvolunteer($params) {
     ]);
     if (!empty($address['values'])) {
       $contact['address'] = $address['values'][0];
+      $contact['street_address'] = $address['values'][0]['street_address'];
+      $contact['city'] = $address['values'][0]['city'];
+      $contact['postal_code'] = $address['values'][0]['postal_code'];
     }
     // Phones.
     $mobile = civicrm_api3('Phone', 'get', [
@@ -105,11 +108,18 @@ function civicrm_api3_contact_Getvolunteer($params) {
         'contact_id' => $relationships['values'][0]['contact_id_b'],
         'return' => ['first_name', 'last_name', 'phone'],
       ]);
-      $contact['emergency'] = $emergencyContact;
+      $contact['emergency_first_name'] = $emergencyContact['first_name'];
+      $contact['emergency_last_name'] = $emergencyContact['last_name'];
+      $contact['emergency_phone'] = $emergencyContact['phone'];
     }
     // Timetable.
     $timeTableParams = ['entity_id' => $params['cid'], 'entity_table' => 'civicrm_contact'];
-    $contact['timetable'] = CRM_Yhvrequestform_BAO_VolunteerTimetable::getTimeTable($timeTableParams);
+    $timeTable = CRM_Yhvrequestform_BAO_VolunteerTimetable::getTimeTable($timeTableParams);
+    if (!empty($timeTable)) {
+      foreach ($timeTable as $entries) {
+        $contact[$entries['day'] . '_' . $entries['time']] = $entries['number_of_volunteers'];
+      }
+    }
     return civicrm_api3_create_success($contact, $params, 'Contact', 'Getvolunteer');
   }
   else {
