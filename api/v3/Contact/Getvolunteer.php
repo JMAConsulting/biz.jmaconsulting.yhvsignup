@@ -72,34 +72,34 @@ function civicrm_api3_contact_Getvolunteer($params) {
     }
     // Phones.
     $mobile = civicrm_api3('Phone', 'get', [
-      'return' => 'phone_numeric',
+      'return' => 'phone',
       'sequential' => 1,
       'contact_id' => $params['cid'],
       'location_type_id' => 'Home',
       'phone_type_id' => 'Mobile',
     ]);
     $residence = civicrm_api3('Phone', 'get', [
-      'return' => 'phone_numeric',
+      'return' => 'phone',
       'sequential' => 1,
       'contact_id' => $params['cid'],
       'location_type_id' => 'Home',
       'phone_type_id' => 'Phone',
     ]);
     $office = civicrm_api3('Phone', 'get', [
-      'return' => 'phone_numeric',
+      'return' => 'phone',
       'sequential' => 1,
       'contact_id' => $params['cid'],
       'location_type_id' => 'Work',
       'phone_type_id' => 'Phone',
     ]);
     if (!empty($mobile['values'][0]['phone_numeric'])) {
-      $contact['mobile'] = $mobile['values'][0]['phone_numeric'];
+      $contact['mobile'] = $mobile['values'][0]['phone'];
     }
     if (!empty($residence['values'][0]['phone_numeric'])) {
-      $contact['residence'] = $residence['values'][0]['phone_numeric'];
+      $contact['residence'] = $residence['values'][0]['phone'];
     }
     if (!empty($office['values'][0]['phone_numeric'])) {
-      $contact['office'] = $office['values'][0]['phone_numeric'];
+      $contact['office'] = $office['values'][0]['phone'];
     }
     // Relationship.
     $relationships = civicrm_api3('Relationship', 'get', [
@@ -109,6 +109,18 @@ function civicrm_api3_contact_Getvolunteer($params) {
     ]);
     if (!empty($relationships['values'])) {
       $contact['relationships'] = $relationships['values'];
+      $relationshipTypes = [
+        12 => 'Child 子／女',
+        13 => 'Friend 朋友',
+        14 => 'Grandchild 孫子／孫女',
+        22 => 'Grandparent 祖父／祖母',
+        15 => 'Guardian 監護人',
+        16 => 'Parent 父／母',
+        17 => 'Partner 伴侶',
+        18 => 'Relative 親戚',
+        19 => 'Sibling 兄弟姊妹',
+        20 => 'Spouse 配偶',
+      ];
       $emergencyContact = civicrm_api3('Contact', 'getsingle', [
         'contact_id' => $relationships['values'][0]['contact_id_b'],
         'return' => ['first_name', 'last_name', 'phone'],
@@ -116,6 +128,7 @@ function civicrm_api3_contact_Getvolunteer($params) {
       $contact['emergency_first_name'] = $emergencyContact['first_name'];
       $contact['emergency_last_name'] = $emergencyContact['last_name'];
       $contact['emergency_phone'] = $emergencyContact['phone'];
+      $contact['emergency_relationship'] = $relationshipTypes[$emergencyContact['relationship_type_id']];
     }
     // Timetable.
     $timeTableParams = ['entity_id' => $params['cid'], 'entity_table' => 'civicrm_contact'];
