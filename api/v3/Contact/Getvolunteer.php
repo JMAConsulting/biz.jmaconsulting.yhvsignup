@@ -97,9 +97,15 @@ function civicrm_api3_contact_Getvolunteer($params) {
     $relationships = civicrm_api3('Relationship', 'get', [
       'contact_id_a' => $params['cid'],
       'sequential' => 1,
+      'options' => ['limit' => 1],
     ]);
     if (!empty($relationships['values'])) {
       $contact['relationships'] = $relationships['values'];
+      $emergencyContact = civicrm_api3('Contact', 'getsingle', [
+        'contact_id' => $relationships['values'][0]['contact_id_b'],
+        'return' => ['first_name', 'last_name', 'phone'],
+      ]);
+      $contact['emergency'] = $emergencyContact;
     }
     // Timetable.
     $timeTableParams = ['entity_id' => $params['cid'], 'entity_table' => 'civicrm_contact'];
