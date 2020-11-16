@@ -54,13 +54,48 @@ function civicrm_api3_contact_Getvolunteer($params) {
       $contact[$id] = $contact[$customField];		    
     }
     // Phones.
-    $mobile = civicrm_api3('Phone', 'get', ['return' => 'phone_numeric', 'sequential' => 1, 'contact_id' => $params['cid'], 'location_type_id' => 'Home', 'phone_type_id' => 'Mobile']);
-    $residence = civicrm_api3('Phone', 'get', []);
-    CRM_Core_Error::debug('ag', $phones);
-    //foreach () {
-    //}
-    CRM_Core_Error::debug('efa', $contact);exit;
-    return civicrm_api3_create_success($returnValues, $params, 'Contact', 'Getvolunteer');
+    $mobile = civicrm_api3('Phone', 'get', [
+      'return' => 'phone_numeric',
+      'sequential' => 1,
+      'contact_id' => $params['cid'],
+      'location_type_id' => 'Home',
+      'phone_type_id' => 'Mobile',
+    ]);
+    $residence = civicrm_api3('Phone', 'get', [
+      'return' => 'phone_numeric',
+      'sequential' => 1,
+      'contact_id' => $params['cid'],
+      'location_type_id' => 'Home',
+      'phone_type_id' => 'Phone',
+    ]);
+    $office = civicrm_api3('Phone', 'get', [
+      'return' => 'phone_numeric',
+      'sequential' => 1,
+      'contact_id' => $params['cid'],
+      'location_type_id' => 'Work',
+      'phone_type_id' => 'Phone',
+    ]);
+    if (!empty($mobile['values'][0]['phone_numeric'])) {
+      $contact['mobile'] = $mobile['values'][0]['phone_numeric'];
+    }
+    if (!empty($residence['values'][0]['phone_numeric'])) {
+      $contact['residence'] = $residence['values'][0]['phone_numeric'];
+    }
+    if (!empty($office['values'][0]['phone_numeric'])) {
+      $contact['office'] = $office['values'][0]['phone_numeric'];
+    }
+    // Relationship.
+    $relationships = civicrm_api3('Relationship', 'get', [
+      'contact_id_a' => $params['cid'],
+      'sequential' => 1,
+    ]);
+    if (!empty($relationships['values'])) {
+      $contact['relationships'] = $relationships['values'];
+    }
+    // Timetable.
+    $timeTableParams = ['entity_id' => $params['cid'], 'entity_table' => 'civicrm_contact'];
+    $contact['timetable'] = CRM_Yhvrequestform_BAO_VolunteerTimetable::getTimeTable($timeTableParams);
+    return civicrm_api3_create_success($contact, $params, 'Contact', 'Getvolunteer');
   }
   else {
     throw new API_Exception(/*error_message*/ 'Contact ID is required', /*error_code*/ 'cid_incorrect');
