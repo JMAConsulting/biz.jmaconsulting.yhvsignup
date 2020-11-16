@@ -53,6 +53,11 @@ function civicrm_api3_contact_Getvolunteer($params) {
     foreach ($customIds as $id => $customField) {
       $contact[$id] = $contact[$customField];		    
     }
+    // Gender.
+    if (!empty($contact['gender_id'])) {
+      $gender = CRM_Contact_BAO_Contact::buildOptions('gender_id');
+      $contact['gender'] = $gender[$contact['gender_id']];
+    }
     // Address.
     $address = civicrm_api3('Address', 'get', [
       'contact_id' => $params['cid'],
