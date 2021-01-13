@@ -42,12 +42,9 @@ function civicrm_api3_yhvsignup_Doaction($params) {
     if (!empty($params['ID'])) {
       $options = [];
       // Create Params.
-      $date = date('Ymd', strtotime($params['Date']));
-      $time = date('His', strtotime($params['Start_Time']));
       $processorParams = [
         'id' => $params['ID'],
         'contact_id' => $params['contact_id'],
-        'date' => date('YmdHis', strtotime("$date $time")),
         'job' => $params['Job'],
         'location' => $params['Location'],
         'division' => $params['Division'],
@@ -55,6 +52,18 @@ function civicrm_api3_yhvsignup_Doaction($params) {
         'status' => $params['Status'],
         'volunteer_hours' => $params['Volunteer_Hours'],
       ];
+      if (!empty($params['Date'])) {
+        $date = date('Ymd', strtotime($params['Date']));
+      }
+      if (!empty($params['Start_Time'])) {
+        $time = date('His', strtotime($params['Start_Time']));
+      }
+      if (!empty($date) && !empty($time)) {
+        $processorParams['date'] = date('YmdHis', strtotime("$date $time"));
+      }
+      elseif (!empty($date) && empty($time)) {
+        $processorParams['date'] = date('YmdHis', strtotime("$date"));
+      }
       $call = wpcmrf_api('FormProcessor', 'volunteer_signup', $processorParams, $options, CMRF_PROFILE_ID);
       $returnValues = $call->getReply();
     }
@@ -71,12 +80,9 @@ function civicrm_api3_yhvsignup_Doaction($params) {
   if (!empty($params['batchupdate'])) {
     foreach ($params['batchupdate'] as $updateParams) {
       $options = [];
-      $date = date('Ymd', strtotime($updateParams['Date']));
-      $time = date('His', strtotime($updateParams['Start_Time']));
       $processorParams = [
         'id' => $updateParams['ID'],
         'contact_id' => (int) $params['cid'],
-        'date' => date('YmdHis', strtotime("$date $time")),
         'job' => $updateParams['Job'],
         'location' => $updateParams['Location'],
         'division' => $updateParams['Division'],
@@ -84,6 +90,18 @@ function civicrm_api3_yhvsignup_Doaction($params) {
         'status' => $updateParams['Status'],
         'volunteer_hours' => $updateParams['Volunteer_Hours'],
       ];
+      if (!empty($updateParams['Date'])) {
+        $date = date('Ymd', strtotime($updateParams['Date']));
+      }
+      if (!empty($updateParams['Start_Time'])) {
+        $time = date('His', strtotime($updateParams['Start_Time']));
+      }
+      if (!empty($date) && !empty($time)) {
+        $processorParams['date'] = date('YmdHis', strtotime("$date $time"));
+      }
+      elseif (!empty($date) && empty($time)) {
+        $processorParams['date'] = date('YmdHis', strtotime("$date"));
+      }
       $call = wpcmrf_api('FormProcessor', 'volunteer_signup', $processorParams, $options, CMRF_PROFILE_ID);
       $call->getReply();
     }
