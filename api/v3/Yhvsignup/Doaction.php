@@ -34,6 +34,7 @@ function civicrm_api3_yhvsignup_Doaction($params) {
         'status' => $params['Status'],
         'volunteer_hours' => $params['Volunteer_Hours'],
       ];
+      $processorParams['funder'] = getFunder($params);
       $call = wpcmrf_api('FormProcessor', 'volunteer_signup', $processorParams, $options, CMRF_PROFILE_ID);
       $returnValues = $call->getReply();
     }
@@ -52,6 +53,9 @@ function civicrm_api3_yhvsignup_Doaction($params) {
         'status' => $params['Status'],
         'volunteer_hours' => $params['Volunteer_Hours'],
       ];
+
+      $processorParams['funder'] = getFunder($params);
+
       if (!empty($params['Date'])) {
         $date = date('Ymd', strtotime($params['Date']));
       }
@@ -90,6 +94,8 @@ function civicrm_api3_yhvsignup_Doaction($params) {
         'status' => $updateParams['Status'],
         'volunteer_hours' => $updateParams['Volunteer_Hours'],
       ];
+      $processorParams['funder'] = getFunder($params);
+
       if (!empty($updateParams['Date'])) {
         $date = date('Ymd', strtotime($updateParams['Date']));
       }
@@ -113,4 +119,13 @@ function civicrm_api3_yhvsignup_Doaction($params) {
     $returnValues['values'] = [];
   }
   return civicrm_api3_create_success($returnValues['values'], $params, 'Yhvsignup', 'Doaction');
+}
+
+function getFunder($params) {
+  $values = [
+    'location' => $params['Location'],
+    'program' => $params['Program'],
+    'division' => $params['Division'],
+  ];
+  return CRM_Yhvrequestform_Utils::getFunder($values);
 }
