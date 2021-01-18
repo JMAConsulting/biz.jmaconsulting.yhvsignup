@@ -82,8 +82,7 @@ function civicrm_api3_contact_Getvolunteer($params) {
       'return' => 'phone',
       'sequential' => 1,
       'contact_id' => $params['cid'],
-      'location_type_id' => 'Home',
-      'phone_type_id' => 'Phone',
+      'is_primary' => 1, 
     ]);
     $office = civicrm_api3('Phone', 'get', [
       'return' => 'phone',
