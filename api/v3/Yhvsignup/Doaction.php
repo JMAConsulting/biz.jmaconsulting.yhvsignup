@@ -124,8 +124,15 @@ function civicrm_api3_yhvsignup_Doaction($params) {
 function getFunder($params) {
   $values = [
     'location' => $params['Location'],
-    'program' => $params['Program'],
     'division' => $params['Division'],
   ];
+  // Check first if we have a match for the program.
+  $lookup = CRM_Core_DAO::singleValueQuery("SELECT Program FROM civicrm_volunteer_lookup WHERE Location = %1 AND Division = %2", [1 => [$params['Location'], 'String'], 2 => [$params['Division'], 'String']])->fetchAll();
+  if ($lookup == 'Any') {
+    $values['program'] = $lookup;
+  }
+  else {
+    $values['program'] = $params['Program'];
+  }
   return CRM_Yhvrequestform_Utils::getFunder($values);
 }
