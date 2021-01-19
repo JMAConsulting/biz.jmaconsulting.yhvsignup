@@ -127,7 +127,7 @@ function getFunder($params) {
     'division' => $params['Division'],
   ];
   // Check first if we have a match for the program.
-  $lookup = CRM_Core_DAO::singleValueQuery("SELECT Program FROM civicrm_volunteer_lookup WHERE Location = %1 AND Division = %2", [1 => [$params['Location'], 'String'], 2 => [$params['Division'], 'String']])->fetchAll();
+  $lookup = CRM_Core_DAO::singleValueQuery("SELECT Program FROM civicrm_volunteer_lookup WHERE Location = %1 AND Division = %2", [1 => [$params['Location'], 'String'], 2 => [$params['Division'], 'String']]);
   if ($lookup == 'Any') {
     $values['program'] = $lookup;
   }
