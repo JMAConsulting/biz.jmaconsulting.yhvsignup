@@ -94,7 +94,6 @@ function civicrm_api3_yhvsignup_Doaction($params) {
         'status' => $updateParams['Status'],
         'volunteer_hours' => $updateParams['Volunteer_Hours'],
       ];
-      $processorParams['funder'] = getFunder($params);
 
       if (!empty($updateParams['Date'])) {
         $date = date('Ymd', strtotime($updateParams['Date']));
@@ -107,9 +106,9 @@ function civicrm_api3_yhvsignup_Doaction($params) {
       }
       elseif (!empty($date) && empty($time)) {
         $processorParams['date'] = date('YmdHis', strtotime("$date"));
-      }
+      } 
       $call = wpcmrf_api('FormProcessor', 'volunteer_signup', $processorParams, $options, CMRF_PROFILE_ID);
-      $call->getReply();
+      $d = $call->getReply();
     }
   }
 
