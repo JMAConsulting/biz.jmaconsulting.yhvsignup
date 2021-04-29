@@ -18,6 +18,7 @@ function civicrm_api3_yhvsignup_Geturls($params) {
     'filterUrl' => $params['target'] . '/volunteer-filter',
     'actionUrl' => $params['target'] . '/volunteer-action',
     'validateUrl' => $params['target'] . '/volunteer-email',
+    'validatevolUrl' => $params['target'] . '/volunteer-profile-email',
   ];
 
   return civicrm_api3_create_success($returnValues, $params, 'Yhvsignup', 'Geturls');
