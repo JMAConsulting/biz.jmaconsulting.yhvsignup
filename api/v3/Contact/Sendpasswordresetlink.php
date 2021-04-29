@@ -47,6 +47,26 @@ function civicrm_api3_contact_Sendpasswordresetlink($params) {
   $body_subject = CRM_Core_Smarty::singleton()->fetch("string:$messageTemplates->msg_subject");
   $body_text    = str_replace('{username}', $params['username'], str_replace('{url}', $url, $messageTemplates->msg_text));
   $body_html    = str_replace('{username}', $params['username'], str_replace('{url}', $url, $messageTemplates->msg_html));
+
+  $contactParams = ['contact_id' => $contactID];
+  list($contact) = CRM_Utils_Token::getTokenDetails($contactParams);
+  $contact = $contact[$contactID];
+  $tokens = array_merge(CRM_Utils_Token::getTokens($body_text),
+    CRM_Utils_Token::getTokens($body_html),
+    CRM_Utils_Token::getTokens($body_subject));
+  // do replacements in text and html body
+  $type = ['html', 'text'];
+  foreach ($type as $key => $value) {
+    $bodyType = "body_{$value}";
+    if ($$bodyType) {
+      CRM_Utils_Token::replaceGreetingTokens($$bodyType, NULL, $contact['contact_id']);
+      $$bodyType = CRM_Utils_Token::replaceDomainTokens($$bodyType, $domain, TRUE, $tokens, TRUE);
+      $$bodyType = CRM_Utils_Token::replaceContactTokens($$bodyType, $contact, FALSE, $tokens, FALSE, TRUE);
+      $$bodyType = CRM_Utils_Token::replaceComponentTokens($$bodyType, $contact, $tokens, TRUE);
+      $$bodyType = CRM_Utils_Token::replaceHookTokens($$bodyType, $contact, $categories, TRUE);
+    }
+  }
+
   $body_html = CRM_Core_Smarty::singleton()->fetch("string:{$body_html}");
   $body_text = CRM_Core_Smarty::singleton()->fetch("string:{$body_text}");
   $mailParams = array(
